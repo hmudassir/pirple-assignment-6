@@ -2,6 +2,7 @@ var http = require('http');
 var url = require('url');
 var StringDecoder = require('string_decoder').StringDecoder;
 var cluster = require('cluster');
+var childProcess = require('child_process');
 
 var config = require('./config');
 
@@ -55,8 +56,12 @@ var handlers = {};
 // /hello request handler
 handlers.hello = function(data, callback){
 
+    var cat = childProcess.spawn('cat', ['./message.txt']);
+    cat.stdout.on('data', function(dataObject){
+        var strData = dataObject.toString();
+        callback(200, {'assignment_number': 'Assignment 6', 'message': strData});
+    });
     //To send data with status 200
-    callback(200, {'assignment_number': 'Assignment 6', 'message': 'Welcome For Assignments under Node Learning course by Priple.'});
 }
 
 //handler Not Found
